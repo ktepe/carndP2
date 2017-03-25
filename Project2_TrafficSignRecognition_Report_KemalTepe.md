@@ -90,6 +90,9 @@ Number of testing examples = 12630
 Image data shape = (32, 32, 3)
 Number of classes = 4
 ```
+Histgram of training and testing data sets is provided in Figure below.
+
+![histogram](./Hist_signs.png)
 
 #### 3. Design and Test a Model Architecture
 
@@ -296,7 +299,7 @@ The trained and validated model was used with 5 new images which were obtained f
 + stop 
 + yield
 
-The succes rate on the trained model with these images were 80-100%. For this limited set, 80% was quite good, the possible causes for error are skewed images, loss of information during the scaling and cropping. 
+The succes rate on the trained model with these images were 80-100%. For this limited set, 80% was quite good, the possible causes for error are skewed images, loss of information during the scaling and cropping. The success of the model in the test set provided in the original data set is around 95-92%. However the success rate of the newly acquired images were 80-100%. 
 
 In the last run the model achieved 100% accuracy.
 
