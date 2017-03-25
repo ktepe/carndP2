@@ -81,6 +81,7 @@ print("Number of classes =", n_classes)
 ```
 
 The output for this part was: 
+
 ```
 Number of training examples = 34799
 Number of testing examples = 12630
@@ -90,25 +91,132 @@ Number of classes = 4
 
 #### 3. Design and Test a Model Architecture
 
-The Lenet architecture is used in the project. Before setting up the architecture, I have reviewed few key papers in the area and the following two were the most useful: [1](./sermanet-ijcnn-11.pdf) by Sermanet et al. and [2](.\lenet_chalmers) by Credi. Credi in [2] has also used Lenet to comprate his own architecture for road sign clasification. The crucial point in the Lenet for this tasks was to identify parameters such as number of hidden nodes in the layers and convolutional filter dimensions. After extensive trials of these parameters, the following architecture was constructed. 
+##### ..1. Architecture
+
+ArtThe Lenet architecture is used in the project. Before setting up the architecture, I have reviewed few key papers in the area and the following two were the most useful: [1](./sermanet-ijcnn-11.pdf) by Sermanet et al. and [2](.\lenet_chalmers) by Credi. Credi in [2] has also used Lenet to comprate his own architecture for road sign clasification. The crucial point in the Lenet for this tasks was to identify parameters such as number of hidden nodes in the layers and convolutional filter dimensions. After extensive trials of these parameters, the following architecture was constructed. 
 
 |Table 1: Architecture | | |
+|---------|--------|--------|
 |Layer | Description | Parameters |
 |Layer 1| CNN 5x5x1 | input=32x32x1 output=28x28x48|
 |Pooling | 2x2x1 Max | input=28x28x1 output=14x14x1 |
+| Activation| ELU| |
+|Layer 2| CNN 5x5x1 | input=14x14x48 output=10x10x96|
+|Pooling | 2x2x1 Max | input=10x10x1 output=5x5x1 |
+| Activation| ELU| |
+|Layer 3| fully connected | input=5x5x96 output=140|
+| Activation| ELU| |
+|Layer 4| fully connected | input=140 output=96|
+| Activation| ELU| |
+|Layer 5| fully connected | input=96 output=43|
+|logits| output=43| |
+
+The full Lenet code is given below:
+
+```python
+#my convolutional NN architecture. 
+#it is derived from Lenet 5 architecture, 
+#but optimized by using number of hidden nodes for the traffic sign clasification 
+
+def LeNet(x):    
+    # Arguments used for tf.truncated_normal, randomly defines variables for the weights and biases for each layer
+    mu = 0
+    sigma = 0.03 # hyperparameter for noise
+    #set up the number of nodes between the layers
+    w1nodes=48 # number of conv hidden nodes in the conv NN in the layer 1
+    w2nodes=96 # number of conv hidden nodes in the conv NN in the layer 2 
+    w3nodes=5*5*w2nodes #number of fully connected nodes in layer 3 and flattening 
+    w4nodes=140 #number of fully connected nodes in layer 4
+    w5nodes=96 #number of fully connected nodes in Layer 5
+    outputnodes=43 #number of output nodes, since there are 43 signs in the data set.
+    
+    # SOLUTION: Layer 1: Convolutional. Input = 32x32x1. Output = 28x28x(w1nodes).
+    conv1_W = tf.Variable(tf.truncated_normal(shape=(5, 5, 1, w1nodes), mean = mu, stddev = sigma))
+    conv1_b = tf.Variable(tf.zeros(w1nodes))
+    conv1   = tf.nn.conv2d(x, conv1_W, strides=[1, 1, 1, 1], padding='VALID') + conv1_b
+
+    # SOLUTION: Activation.
+    #instead of RELU, i used ELU non-linear function
+    conv1 = tf.nn.elu(conv1)
+
+    # SOLUTION: Pooling. Input = 28x28x(w1nodes). Output = 14x14x(w1nodes).
+    conv1 = tf.nn.max_pool(conv1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
+
+    # SOLUTION: Layer 2: Convolutional. Output = 10x10x(w2nodes).
+    conv2_W = tf.Variable(tf.truncated_normal(shape=(5, 5, w1nodes, w2nodes), mean = mu, stddev = sigma))
+    conv2_b = tf.Variable(tf.zeros(w2nodes))
+    conv2   = tf.nn.conv2d(conv1, conv2_W, strides=[1, 1, 1, 1], padding='VALID') + conv2_b
+    
+    # SOLUTION: Activation.
+    conv2 = tf.nn.elu(conv2)
+
+    # SOLUTION: Pooling. Input = 10x10x1(w2nodes) Output = 5x5x(w2nodes).
+    conv2 = tf.nn.max_pool(conv2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
+
+    # SOLUTION: Flatten. Input = 5x5x(w2nodes). Output = w3nodes.
+    fc0   = flatten(conv2)
+    
+    # SOLUTION: Layer 3: Fully Connected. Input = w3nodes Output = w4nodes
+    
+    fc1_W = tf.Variable(tf.truncated_normal(shape=(w3nodes, w4nodes), mean = mu, stddev = sigma))
+    fc1_b = tf.Variable(tf.zeros(w4nodes))
+    fc1   = tf.matmul(fc0, fc1_W) + fc1_b
+    
+    # SOLUTION: Activation.
+    fc1    = tf.nn.elu(fc1)
+
+    # SOLUTION: Layer 4: Fully Connected. Input = w4nodes Output = w5nodes
+
+    fc2_W  = tf.Variable(tf.truncated_normal(shape=(w4nodes, w5nodes), mean = mu, stddev = sigma))
+    fc2_b  = tf.Variable(tf.zeros(w5nodes))
+    fc2    = tf.matmul(fc1, fc2_W) + fc2_b
+    
+    # SOLUTION: Activation.
+    fc2    = tf.nn.elu(fc2)
+
+    # SOLUTION: Layer 5: Fully Connected. Input = w5nodes Output = outputnodes.
+    
+    fc3_W  = tf.Variable(tf.truncated_normal(shape=(w5nodes, outputnodes), mean = mu, stddev = sigma))
+    fc3_b  = tf.Variable(tf.zeros(outputnodes))
+    logits = tf.matmul(fc2, fc3_W) + fc3_b
+    
+    return logits
 
 
+```
 
+##### ..2. Training, validating and testing
 
-The code for this step is contained in the fourth code cell of the IPython notebook.
+After the architecture set up. The training and evaluation modules are set up as follows:
 
-As a first step, I decided to convert the images to grayscale because ...
+```python
+# setup the training parameters
+#original rate = 0.001 
+rate=0.001
+EPOCHS = 20
+BATCH_SIZE = 128
+print('learning rate', rate, 'Epoch', EPOCHS, 'Batch Size', BATCH_SIZE)
 
-Here is an example of a traffic sign image before and after grayscaling.
+# setup tensors to be feed at each epoch
+x = tf.placeholder(tf.float32, (None, 32, 32, 1))
+y = tf.placeholder(tf.int32, (None))
+one_hot_y = tf.one_hot(y,43)
 
-alt text
+# Train your model here.
+#set up the system
+logits = LeNet(x)
+cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=one_hot_y)
+loss_operation = tf.reduce_mean(cross_entropy)
+optimizer = tf.train.AdamOptimizer(learning_rate = rate)
+training_operation = optimizer.minimize(loss_operation)
 
-As a last step, I normalized the image data because ...
+#Evaluate how well the loss and accuracy of the model for a given dataset.
+correct_prediction = tf.equal(tf.argmax(logits, 1), tf.argmax(one_hot_y, 1))
+accuracy_operation = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+saver = tf.train.Saver()
+
+```
+
 
 #### 2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)
 
