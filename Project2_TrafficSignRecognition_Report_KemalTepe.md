@@ -2,45 +2,63 @@
 
 ## Kemal Tepe, ketepe@gmail.common
 
-Build a Traffic Sign Recognition Project
+### Objective: To build a traffic sign recognition architecture using convolutional neural networks (CNN) which can achieve 93% or more accuracy with given German road sign dataset.
 
-The goals / steps of this project are the following:
 
-Load the data set (see below for links to the project data set)
-Explore, summarize and visualize the data set
-Design, train and test a model architecture
-Use the model to make predictions on new images
-Analyze the softmax probabilities of the new images
-Summarize the results with a written report
-Rubric Points
+### Summary:
 
-### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.
+The starting point for this project was to use Lenet-5 CNN architecture what we have learned in the Udacity Self Driving Nano-Degree (carND). Original architecture was to recognize hand written numbers. However, here we need to recognize road signs. There are more signs, 43 signs, compared to number 0-9. The rest of the document explains steps taken to complete the task. The architecture provided in this folder can recognize signs with 94-96% accucary, which exceeds the required 93%.
 
-### Writeup / README
+### Lay out of the code:
 
-#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
+0. Set up the important libraries and imports for rest of the program such as tensorflow, pandas, numpy.
+1. Load the data set 
+2. Explore, summarize and visualize the data set
+3. Design, train and test a model architecture
+4. Use the model to make predictions on new images
+5. Summarize the results with a written report
 
-You're reading it! and here is a link to my project code
+Now we will go to individual steps of the code.
 
-### Data Set Summary & Exploration
+#### 0. Set up the libraries
 
-#### 1. Provide a basic summary of the data set and identify where in your code the summary was done. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
+```python
+import pickle
+import matplotlib.pyplot as plt
+import random
+import pandas as pd
+import numpy as np
+import tensorflow as tf
+from sklearn.utils import shuffle
+from tensorflow.contrib.layers import flatten
+```
 
-The code for this step is contained in the second code cell of the IPython notebook.
+#### 1. Load the data set
 
-I used the pandas library to calculate summary statistics of the traffic signs data set:
+The code comments provides details about the set and how they are loaded.
 
-The size of training set is ?
-The size of test set is ?
-The shape of a traffic sign image is ?
-The number of unique classes/labels in the data set is ?
-#### 2. Include an exploratory visualization of the dataset and identify where the code is in your code file.
+```python
+#Reading the training, validation and testing data 
+#stored in the subfolder "traffic-signs-data" folder
+training_file = './traffic-signs-data/train.p'
+validation_file='./traffic-signs-data/valid.p'
+testing_file = './traffic-signs-data/test.p'
 
-The code for this step is contained in the third code cell of the IPython notebook.
+with open(training_file, mode='rb') as f:
+    train = pickle.load(f)
+with open(validation_file, mode='rb') as f:
+    valid = pickle.load(f)
+with open(testing_file, mode='rb') as f:
+    test = pickle.load(f)
+    
+X_train, y_train = train['features'], train['labels']
+X_valid, y_valid = valid['features'], valid['labels']
+X_test, y_test = test['features'], test['labels']
 
-Here is an exploratory visualization of the data set. It is a bar chart showing how the data ...
+```
+#### 2. Exploratory visualization of the dataset and identify
 
-alt text
+The following code obtains necessary information such as size of the data set, shape to be used in the previous sections. The labels are also correctly identified.
 
 ### Design and Test a Model Architecture
 
