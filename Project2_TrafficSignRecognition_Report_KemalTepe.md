@@ -60,9 +60,45 @@ X_test, y_test = test['features'], test['labels']
 
 The following code obtains necessary information such as size of the data set, shape to be used in the previous sections. The labels are also correctly identified.
 
-### Design and Test a Model Architecture
+```pyhton
+#Number of training examples
+n_train = len(X_train)
 
-#### 1. Describe how, and identify where in your code, you preprocessed the image data. What tecniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc.
+#Number of testing examples.
+n_test = len(X_test)
+
+#the shape of an traffic sign image
+image_shape = X_train[0].shape
+
+#How many unique classes/labels there are in the dataset.
+n_classes = len(train)
+
+print("Number of training examples =", n_train)
+print("Number of testing examples =", n_test)
+print("Image data shape =", image_shape)
+print("Number of classes =", n_classes)
+
+```
+
+The output for this part was: 
+```
+Number of training examples = 34799
+Number of testing examples = 12630
+Image data shape = (32, 32, 3)
+Number of classes = 4
+```
+
+#### 3. Design and Test a Model Architecture
+
+The Lenet architecture is used in the project. Before setting up the architecture, I have reviewed few key papers in the area and the following two were the most useful: [1](./sermanet-ijcnn-11.pdf) by Sermanet et al. and [2](.\lenet_chalmers) by Credi. Credi in [2] has also used Lenet to comprate his own architecture for road sign clasification. The crucial point in the Lenet for this tasks was to identify parameters such as number of hidden nodes in the layers and convolutional filter dimensions. After extensive trials of these parameters, the following architecture was constructed. 
+
+|Table 1: Architecture | | |
+|Layer | Description | Parameters |
+|Layer 1| CNN 5x5x1 | input=32x32x1 output=28x28x48|
+|Pooling | 2x2x1 Max | input=28x28x1 output=14x14x1 |
+
+
+
 
 The code for this step is contained in the fourth code cell of the IPython notebook.
 
