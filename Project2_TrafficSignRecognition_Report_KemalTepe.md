@@ -95,7 +95,7 @@ Number of classes = 4
 
 ##### 3.1. Architecture
 
-ArtThe Lenet architecture is used in the project. Before setting up the architecture, I have reviewed few key papers in the area and the following two were the most useful: [1](./sermanet-ijcnn-11.pdf) by Sermanet et al. and [2](.\lenet_chalmers) by Credi. Credi in [2] has also used Lenet to comprate his own architecture for road sign clasification. The crucial point in the Lenet for this tasks was to identify parameters such as number of hidden nodes in the layers and convolutional filter dimensions. After extensive trials of these parameters, the following architecture was constructed. 
+ArtThe Lenet architecture is used in the project. Before setting up the architecture, I have reviewed few key papers in the area and the following two were the most useful: [[1]](./sermanet-ijcnn-11.pdf) by Sermanet et al. and [[2]](./lenet_chalmers.pdf) by Credi. Credi in [2] has also used Lenet to comprate his own architecture for road sign clasification. The crucial point in the Lenet for this tasks was to identify parameters such as number of hidden nodes in the layers and convolutional filter dimensions. After extensive trials of these parameters, the following architecture was constructed. 
 
 |Table 1: Architecture | | |
 |---------|--------|--------|
