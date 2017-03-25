@@ -9,7 +9,7 @@
 
 The starting point for this project was to use Lenet-5 CNN architecture what we have learned in the Udacity Self Driving Nano-Degree (carND). Original architecture was to recognize hand written numbers. However, here we need to recognize road signs. There are more signs, 43 signs, compared to number 0-9. The rest of the document explains steps taken to complete the task. The architecture provided in this folder can recognize signs with 94-96% accucary, which exceeds the required 93%.
 
-### Lay out of the code:
+### Lay out of the report:
 
 0. Set up the important libraries and imports for rest of the program such as tensorflow, pandas, numpy.
 1. Load the data set 
@@ -17,8 +17,10 @@ The starting point for this project was to use Lenet-5 CNN architecture what we 
 3. Design, train and test a model architecture
 4. Use the model to make predictions on new images
 5. Summarize the results with a written report
+6. Stand Out Suggestions
 
 Now we will go to individual steps of the code.
+
 
 #### 0. Set up the libraries
 
@@ -91,7 +93,7 @@ Number of classes = 4
 
 #### 3. Design and Test a Model Architecture
 
-##### ..1. Architecture
+##### 3.1. Architecture
 
 ArtThe Lenet architecture is used in the project. Before setting up the architecture, I have reviewed few key papers in the area and the following two were the most useful: [1](./sermanet-ijcnn-11.pdf) by Sermanet et al. and [2](.\lenet_chalmers) by Credi. Credi in [2] has also used Lenet to comprate his own architecture for road sign clasification. The crucial point in the Lenet for this tasks was to identify parameters such as number of hidden nodes in the layers and convolutional filter dimensions. After extensive trials of these parameters, the following architecture was constructed. 
 
@@ -185,7 +187,7 @@ def LeNet(x):
 
 ```
 
-##### ..2. Training, validating and testing
+##### 3.2. Training, validating and testing setup
 
 After the architecture set up. The training and evaluation modules are set up as follows:
 
@@ -217,6 +219,56 @@ saver = tf.train.Saver()
 
 ```
 
+##### 3.3. Training, validating and testing
+
+With the training setup, the tensorflow session was run with the following code to obtain a model with training, and validate the model with validation set.
+```python
+### Calculate and report the accuracy on the training and validation set.
+### Once a final model architecture is selected, 
+### the accuracy on the test set should be calculated and reported as well.
+with tf.Session() as sess:
+    sess.run(tf.global_variables_initializer())
+    num_examples = len(X_train)
+    
+    print("Training...")
+    print()
+    for i in range(EPOCHS):
+        X_train, y_train = shuffle(X_train, y_train)
+        for offset in range(0, num_examples, BATCH_SIZE):
+            end = offset + BATCH_SIZE
+            batch_x, batch_y = X_train[offset:end], y_train[offset:end]
+            sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
+            
+        validation_accuracy = evaluate(X_valid, y_valid)
+        print("EPOCH {} ...".format(i+1))
+        print("Validation Accuracy = {:.3f}".format(validation_accuracy))
+        print()
+        
+    saver.save(sess, './lenet')
+    print("Model saved")
+```
+
+Finally the testing session was run with the following code on the test data:
+
+```python
+#test accucary
+
+with tf.Session() as sess:
+    saver.restore(sess, tf.train.latest_checkpoint('.'))
+
+    test_accuracy = evaluate(X_test, y_test)
+    print("Test Accuracy = {:.3f}".format(test_accuracy))
+
+```
+
+#### 4. Use the model to make predictions on new images
+
+#### 5. Summarize the results with a written report
+
+#### 6. Stand Out Suggestions
+
+#### EOF
+
 
 #### 2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)
 
@@ -234,20 +286,7 @@ alt text
 
 The difference between the original data set and the augmented data set is the following ...
 
-#### 3. Describe, and identify where in your code, what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
-The code for my final model is located in the seventh cell of the ipython notebook.
-
-My final model consisted of the following layers:
-
-Layer	Description
-Input	32x32x3 RGB image
-Convolution 3x3	1x1 stride, same padding, outputs 32x32x64
-RELU	
-Max pooling	2x2 stride, outputs 16x16x64
-Convolution 3x3	etc.
-Fully connected	etc.
-Softmax	etc.
 #### 4. Describe how, and identify where in your code, you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
 The code for training the model is located in the eigth cell of the ipython notebook.
