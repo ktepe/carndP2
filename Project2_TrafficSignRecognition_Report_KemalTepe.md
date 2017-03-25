@@ -19,7 +19,7 @@ The starting point for this project was to use Lenet-5 CNN architecture what we 
 5. Summarize the results with a written report
 6. Stand Out Suggestions
 
-Now we will go to individual steps of the code.
+The entire code can be obtained using [here](./P2_KemalTepe.ipynb). The data set must be downloaded from [German Traffic Sign Dataset](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset), and must be unzipped in a directory *trafic-signs-data* prior to running the code. Now we will go to important parts of the steps of the code.
 
 
 #### 0. Set up the libraries
