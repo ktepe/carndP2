@@ -247,6 +247,25 @@ with tf.Session() as sess:
     saver.save(sess, './lenet')
     print("Model saved")
 ```
+The output was given like: 
+```
+Training...
+EPOCH 1 ...
+Validation Accuracy = 0.908
+EPOCH 2 ...
+Validation Accuracy = 0.922
+EPOCH 3 ...
+Validation Accuracy = 0.936
+.....
+EPOCH 18 ...
+Validation Accuracy = 0.947
+EPOCH 19 ...
+Validation Accuracy = 0.941
+EPOCH 20 ...
+Validation Accuracy = 0.924
+
+Model saved
+```
 
 Finally the testing session was run with the following code on the test data:
 
@@ -260,94 +279,52 @@ with tf.Session() as sess:
     print("Test Accuracy = {:.3f}".format(test_accuracy))
 
 ```
+Final testing accuracy is:
+```
+Test Accuracy = 0.923
+```
+However, this changes at each run and fluctuates between 95-92%
+
 
 #### 4. Use the model to make predictions on new images
 
-#### 5. Summarize the results with a written report
+The trained and validated model was used with 5 new images which were obtained from the internet. I downloaded German road sign images and cropped the sections which have the signs, then scaled to 32x32 pixel jpeg files. The signs are given below, also in the directory [roadsing](./roadsigns):
+
++ no entry
++ pedestrian
++ speed limit 30
++ stop 
++ yield
+
+The succes rate on the trained model with these images were 80-100%. For this limited set, 80% was quite good, the possible causes for error are skewed images, loss of information during the scaling and cropping. 
+
+In the last run the model achieved 100% accuracy.
+
+```
+Internet Road Sign Accuracy = 1.000
+```
+
+
+#### 5. Summarize the results with a written report and Conclusions
+
+Lenet-5 CNN architecture was found to be very robust and versatile. I have tried a number of different combinations to achieve the required accuracy of 93%. Two documents that I have extensively used are [1](./sermanet-ijcnn-11.pdf) by Sermanet et al. and [2](.\lenet_chalmers) by Credi. Particularly Credi in [2] helped me understand impact of different parameters while tuning them for the desired accuracy. That is why I have selected hidden layers such as 48->96->140->96->43. When we increase the number of  some of the hidden layers, accuracy improved but it took longer to train and construct the model. The above achitecture seems to be quite good in accuracy and level of computational complexity. 
+
++ The final accuracy of the model is around 94-96%.
++ The learningrate 0.001-0.0005 seems to be ideal and for final run 0.001 was used.
++ The noise variance in the Lenet has also had an impact and 0.03 seems to be yielding good results. 
+
+CNN is very versatile and can be optimized with number of different ways to obtain required accuracy and computational complexity. 
+
 
 #### 6. Stand Out Suggestions
 
++ In this architecture we used only grayscale images. If color, which contains alot of information, is included in the model, the acuracy would be much higher. I came accross such architectures to utilize color and they seem to be providing better accuracy compared to only gray models.
+
++ Another improvement could be adaptive learning rate. A fixed learning rate causes fluctuations when the model approaches to its optimal point. The accuracy in the last 6-10 epoch seems to be oscilating around the optimum. If we were to reduce the learning rate at that time, the model would settle on the optimum instead of oscilating around it.
+
++ I have not done any thorough optimization of number of hidden nodes at leach layer. This can be done using more runs with set of parameters to achieve 96-99% accuracy. Especially combined with color, i anticipate the accuracy can be increased to 98-99% range.
+
+
+
 #### EOF
 
-
-#### 2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)
-
-The code for splitting the data into training and validation sets is contained in the fifth code cell of the IPython notebook.
-
-To cross validate my model, I randomly split the training data into a training set and validation set. I did this by ...
-
-My final training set had X number of images. My validation set and test set had Y and Z number of images.
-
-The sixth code cell of the IPython notebook contains the code for augmenting the data set. I decided to generate additional data because ... To add more data to the the data set, I used the following techniques because ...
-
-Here is an example of an original image and an augmented image:
-
-alt text
-
-The difference between the original data set and the augmented data set is the following ...
-
-
-#### 4. Describe how, and identify where in your code, you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
-
-The code for training the model is located in the eigth cell of the ipython notebook.
-
-To train the model, I used an ....
-
-#### 5. Describe the approach taken for finding a solution. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
-
-The code for calculating the accuracy of the model is located in the ninth cell of the Ipython notebook.
-
-My final model results were:
-
-training set accuracy of ?
-validation set accuracy of ?
-test set accuracy of ?
-If an iterative approach was chosen:
-
-What was the first architecture that was tried and why was it chosen?
-What were some problems with the initial architecture?
-How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to over fitting or under fitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
-Which parameters were tuned? How were they adjusted and why?
-What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
-If a well known architecture was chosen:
-
-What architecture was chosen?
-Why did you believe it would be relevant to the traffic sign application?
-How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
-### Test a Model on New Images
-
-#### 1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
-
-Here are five German traffic signs that I found on the web:
-
-alt text alt text alt text alt text alt text
-
-The first image might be difficult to classify because ...
-
-#### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. Identify where in your code predictions were made. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
-
-The code for making predictions on my final model is located in the tenth cell of the Ipython notebook.
-
-Here are the results of the prediction:
-
-Image	Prediction
-Stop Sign	Stop sign
-U-turn	U-turn
-Yield	Yield
-100 km/h	Bumpy Road
-Slippery Road	Slippery Road
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
-
-#### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction and identify where in your code softmax probabilities were outputted. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
-
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
-
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
-
-Probability	Prediction
-.60	Stop sign
-.20	U-turn
-.05	Yield
-.04	Bumpy Road
-.01	Slippery Road
-For the second image ...
