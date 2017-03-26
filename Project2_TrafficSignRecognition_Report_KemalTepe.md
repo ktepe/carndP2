@@ -301,6 +301,38 @@ The trained and validated model was used with 5 new images which were obtained f
 
 The succes rate on the trained model with these images were 80-100%. For this limited set, 80% was quite good, the possible causes for error are skewed images, loss of information during the scaling and cropping. The success of the model in the test set provided in the original data set is around 95-92%. However the success rate of the newly acquired images were 80-100%. 
 
+Last cell of the Jupyter notebook includes the analysis. 
+
+```python
+#investigation of the model with new images
+def getpredict(X_data, y_data):
+    sess = tf.get_default_session()
+    predictions = sess.run(logits, feed_dict={x: X_data, y: y_data})
+        
+    return predictions
+
+
+with tf.Session() as sess:
+    saver.restore(sess, tf.train.latest_checkpoint('.'))
+    predicts = getpredict(x_image, image_labels)
+    print('predictions', predicts)
+
+for i in range(len(predicts)):
+    plt.figure(i)
+    dummy=softmax(predicts[i,:])
+    plt.bar(range(43), dummy, width=0.8, color='blue')
+    plt.ylabel('Number of images')
+    plt.xticks(range(43))
+    plt.show()
+    print('Probabilities of predictions', dummy.argmax(), 'correct one', image_labels[i])
+    
+```
+
+Below if a probability distribution of the predictions.
+
+![histogram](./newimage_pdf.png)
+
+
 In the last run the model achieved 100% accuracy.
 
 ```
