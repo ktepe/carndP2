@@ -260,13 +260,16 @@ Validation Accuracy = 0.922
 EPOCH 3 ...
 Validation Accuracy = 0.936
 .....
+EPOCH 16 ...
+Validation Accuracy = 0.953
+EPOCH 17 ...
+Validation Accuracy = 0.945
 EPOCH 18 ...
-Validation Accuracy = 0.947
+Validation Accuracy = 0.940
 EPOCH 19 ...
-Validation Accuracy = 0.941
+Validation Accuracy = 0.946
 EPOCH 20 ...
-Validation Accuracy = 0.924
-
+Validation Accuracy = 0.944
 Model saved
 ```
 
@@ -284,7 +287,7 @@ with tf.Session() as sess:
 ```
 Final testing accuracy is:
 ```
-Test Accuracy = 0.923
+Test Accuracy = 0.938
 ```
 However, this changes at each run and fluctuates between 95-92%
 
@@ -328,7 +331,7 @@ for i in range(len(predicts)):
     
 ```
 
-Below if a probability distribution of the predictions.
+Below is a probability distribution of the predictions.
 
 ![histogram](./newimage_pdf.png)
 
@@ -342,7 +345,7 @@ Internet Road Sign Accuracy = 1.000
 
 #### 5. Summarize the results with a written report and Conclusions
 
-Lenet-5 CNN architecture was found to be very robust and versatile. I have tried a number of different combinations to achieve the required accuracy of 93%. Two documents that I have extensively used are [1](./sermanet-ijcnn-11.pdf) by Sermanet et al. and [2](.\lenet_chalmers) by Credi. Particularly Credi in [2] helped me understand impact of different parameters while tuning them for the desired accuracy. That is why I have selected hidden layers such as 48->96->140->96->43. When we increase the number of  some of the hidden layers, accuracy improved but it took longer to train and construct the model. The above achitecture seems to be quite good in accuracy and level of computational complexity. 
+Lenet-5 CNN architecture was found to be very robust and versatile. I have tried a number of different combinations to achieve the required accuracy of 93%. Two documents that I have extensively used are [[1]](./sermanet-ijcnn-11.pdf) by Sermanet et al. and [[2]](.\lenet_chalmers) by Credi. Particularly Credi in [2] helped me understand impact of different parameters while tuning them for the desired accuracy. That is why I have selected hidden layers such as 48->96->140->96->43. When we increase the number of  some of the hidden layers, accuracy improved but it took longer to train and construct the model. The above achitecture seems to be quite good in accuracy and level of computational complexity. 
 
 + The final accuracy of the model is around 94-96%.
 + The learningrate 0.001-0.0005 seems to be ideal and for final run 0.001 was used.
